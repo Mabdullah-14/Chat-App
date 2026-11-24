@@ -1,0 +1,15 @@
+model UserConnections {
+  id          String   @id @default(uuid())
+  requesterId String
+  receiverId  String
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  requester User @relation("ConnectionRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  receiver  User @relation("ConnectionReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([requesterId])
+  @@index([receiverId])
+  @@map("userconnections")
+}

@@ -1,0 +1,10 @@
+model Notification {
+    id         String   @id @default(uuid())
+    userId     String   
+    type       String   @default("chat_message") 
+    content    String   
+    isRead     Boolean  @default(false)
+    createdAt  DateTime @default(now())
+
+    @@map("notifications")
+}

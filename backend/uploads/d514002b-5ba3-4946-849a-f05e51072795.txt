@@ -1,0 +1,266 @@
+my-real-estate-app/
+├── public/
+│   ├── assets/               # Static images, icons, logos
+│   │   ├── logos/            # Highline Realty logo variants
+│   │   └── properties/       # ~50 optimized property mock images
+│   └── locales/              # i18n Translation Files
+│       ├── en.json           # English (Default LTR)
+│       ├── ar.json           # Arabic (RTL Framework)
+│       ├── fr.json           # French (LTR)
+│       ├── de.json           # German (LTR)
+│       └── zh.json           # Chinese (LTR)
+├── src/
+│   ├── assets/               # Global CSS and structural styles
+│   │   └── styles/
+│   │       └── index.css     # Tailwind core directives
+│   ├── components/           # Reusable UI & Business Elements
+│   │   ├── ui/               # Atomic Design: Base UI elements
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Badge.tsx     # Contextual tags (For Sale/Rent)
+│   │   │   ├── Pills.tsx     # Specs markers (Beds/Baths)
+│   │   │   └── Dropdown.tsx
+│   │   ├── shared/           # Core Layout Components
+│   │   │   ├── Navbar.tsx    # Header with Auth hooks
+│   │   │   ├── Footer.tsx
+│   │   │   ├── LanguageSwitcher.tsx # i18n switcher element
+│   │   │   └── LayoutWrapper.tsx    # Contextual LTR/RTL wrapper
+│   │   └── modules/          # Domain-Specific UI blocks
+│   │       ├── properties/
+│   │       │   ├── PropertyCard.tsx      # Main reusable loops
+│   │       │   ├── PropertyGrid.tsx
+│   │       │   └── AmenitiesMatrix.tsx   # Pool, Wifi check-grids
+│   │       ├── search/
+│   │       │   ├── AdvancedFilterBar.tsx # Beds/Baths/Price range
+│   │       │   └── RangeSlider.tsx
+│   │       ├── map/
+│   │       │   └── InteractiveMapView.tsx # Side-by-side Map engine
+│   │       └── dashboard/
+│   │           ├── AnalyticsChart.tsx     # Leads metric charts
+│   │           └── Sidebar.tsx
+│   ├── context/              # Global React States (Client-Side state)
+│   │   ├── LanguageContext.tsx # Directs document dir properties
+│   │   └── ThemeContext.tsx
+│   ├── hooks/                # Custom utility hooks
+│   │   ├── useDirection.ts   # Checks if active language is RTL
+│   │   └── useDebounce.ts    # Debounces search inputs
+│   ├── layouts/              # Structural wrappers for different routes
+│   │   ├── MainLayout.tsx    # Public routing view wrapper
+│   │   └── DashboardLayout.tsx # Protected admin panel wrapper
+│   ├── pages/                # Complete Routing Screen View entries
+│   │   ├── public/
+│   │   │   ├── Home.tsx             # Multi-hero variation page
+│   │   │   ├── Listings.tsx         # Split Map/Grid directory
+│   │   │   ├── PropertyDetail.tsx   # Overviews, specs, agent cards
+│   │   │   ├── Agents.tsx
+│   │   │   └── Compare.tsx          # Side-by-side evaluation matrix
+│   │   ├── auth/
+│   │   │   ├── Login.tsx
+│   │   │   └── Register.tsx
+│   │   └── dashboard/
+│   │       ├── Overview.tsx         # Agent summary metrics view
+│   │       ├── ManageListings.tsx   # Current inventory management
+│   │       └── AddProperty.tsx      # Multi-step creation wizard
+│   ├── routes/               # Navigation routers setup
+│   │   └── AppRoutes.tsx
+│   ├── services/             # API data management layers
+│   │   ├── api.ts            # Base Axios setup
+│   │   └── propertyService.ts # CRUD actions blueprints
+│   ├── types/                # Strict TypeScript declaration types
+│   │   └── index.ts          # Interfaces for Property, Agent, DTOs
+│   ├── utils/                # Helper files
+│   │   └── formatters.ts     # Currency converter setups (USD, PKR etc.)
+│   ├── App.tsx               # Main component instance mounting core engines
+│   └── main.tsx              # React client bootstrapping engine
+├── index.html
+├── tailwind.config.js        # Core style configurations
+├── tsconfig.json             # Engine typing parameters
+└── vite.config.ts            # High-speed compilation pipelines
+
+
+colors schema
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        saas: {
+          primary: '#4F46E5',  // Indigo Blue
+          accent: '#F59E0B',   // Amber/Coral Accent
+          dark: '#18181B',     // Zinc Dark
+          bgLight: '#F8FAFC',  // Cool White/Slate Light
+        }
+      }
+    }
+  }
+}
+
+// src/constants/mockData.ts
+
+export interface Property {
+  id: string;
+  titleKey: string;          // Translation key for i18n support
+  descriptionKey: string;    // Translation key for description
+  price: number;
+  currency: string;
+  type: 'apartment' | 'house' | 'villa' | 'commercial';
+  status: 'for-sale' | 'for-rent';
+  beds: number;
+  baths: number;
+  area: number;              // Size in square feet
+  location: {
+    city: string;
+    neighborhood: string;
+    coordinates: { lat: number; lng: number };
+  };
+  mainImage: string;         // References the public/assets/properties folder
+  images: string[];
+  amenities: string[];       // Tags for specifications matrix
+  isFeatured: boolean;
+  agentId: string;
+}
+
+export const mockProperties: Property[] = [
+  {
+    id: "prop-001",
+    titleKey: "property.premium_villa_marina.title",
+    descriptionKey: "property.premium_villa_marina.desc",
+    price: 1250000,
+    currency: "USD",
+    type: "villa",
+    status: "for-sale",
+    beds: 5,
+    baths: 6,
+    area: 5400,
+    location: {
+      city: "Dubai",
+      neighborhood: "Dubai Marina",
+      coordinates: { lat: 25.0772, lng: 55.1304 }
+    },
+    mainImage: "/assets/properties/villa-1.jpg",
+    images: [
+      "/assets/properties/villa-1.jpg",
+      "/assets/properties/interior-1.jpg",
+      "/assets/properties/interior-2.jpg"
+    ],
+    amenities: ["Swimming Pool", "Gym", "Parking", "Central Heating", "Free WiFi"],
+    isFeatured: true,
+    agentId: "agent-001"
+  },
+  {
+    id: "prop-002",
+    titleKey: "property.modern_apartment_downtown.title",
+    descriptionKey: "property.modern_apartment_downtown.desc",
+    price: 3200,
+    currency: "USD", // Per month rental fee structure
+    type: "apartment",
+    status: "for-rent",
+    beds: 2,
+    baths: 2,
+    area: 1250,
+    location: {
+      city: "New York",
+      neighborhood: "Downtown Manhattan",
+      coordinates: { lat: 40.7128, lng: -74.0060 }
+    },
+    mainImage: "/assets/properties/apt-1.jpg",
+    images: [
+      "/assets/properties/apt-1.jpg",
+      "/assets/properties/interior-3.jpg"
+    ],
+    amenities: ["Gym", "Parking", "Elevator", "Free WiFi"],
+    isFeatured: false,
+    agentId: "agent-002"
+  },
+  {
+    id: "prop-003",
+    titleKey: "property.luxury_penthouse_berlin.title",
+    descriptionKey: "property.luxury_penthouse_berlin.desc",
+    price: 890000,
+    currency: "EUR",
+    type: "apartment",
+    status: "for-sale",
+    beds: 3,
+    baths: 3,
+    area: 2100,
+    location: {
+      city: "Berlin",
+      neighborhood: "Mitte",
+      coordinates: { lat: 52.5200, lng: 13.4050 }
+    },
+    mainImage: "/assets/properties/penthouse-1.jpg",
+    images: [
+      "/assets/properties/penthouse-1.jpg",
+      "/assets/properties/interior-4.jpg"
+    ],
+    amenities: ["Swimming Pool", "Elevator", "Parking", "Central Heating"],
+    isFeatured: true,
+    agentId: "agent-001"
+  },
+  {
+    id: "prop-004",
+    titleKey: "property.cozy_suburban_house.title",
+    descriptionKey: "property.cozy_suburban_house.desc",
+    price: 1800,
+    currency: "USD",
+    type: "house",
+    status: "for-rent",
+    beds: 3,
+    baths: 2,
+    area: 1850,
+    location: {
+      city: "Toronto",
+      neighborhood: "Richmond Hill",
+      coordinates: { lat: 43.8828, lng: -79.4403 }
+    },
+    mainImage: "/assets/properties/house-1.jpg",
+    images: [
+      "/assets/properties/house-1.jpg"
+    ],
+    amenities: ["Parking", "Garden", "Central Heating"],
+    isFeatured: false,
+    agentId: "agent-003"
+  },
+  {
+    id: "prop-005",
+    titleKey: "property.commercial_hub_space.title",
+    descriptionKey: "property.commercial_hub_space.desc",
+    price: 4500000,
+    currency: "AED",
+    type: "commercial",
+    status: "for-sale",
+    beds: 0,
+    baths: 4,
+    area: 8200,
+    location: {
+      city: "Dubai",
+      neighborhood: "Business Bay",
+      coordinates: { lat: 25.1843, lng: 55.2721 }
+    },
+    mainImage: "/assets/properties/comm-1.jpg",
+    images: [
+      "/assets/properties/comm-1.jpg"
+    ],
+    amenities: ["Parking", "Elevator", "Security System", "Conference Room"],
+    isFeatured: true,
+    agentId: "agent-002"
+  }
+];
+
+export const mockAgents = [
+  {
+    id: "agent-001",
+    name: "Muhammad Abdullah",
+    email: "abdullah@highlinerealty.com",
+    phone: "+971 50 123 4567",
+    image: "/assets/agents/abdullah.jpg",
+    role: "Senior Real Estate Consultant"
+  },
+  {
+    id: "agent-002",
+    name: "Sarah Jenkins",
+    email: "sarah@highlinerealty.com",
+    phone: "+1 212 555 0199",
+    image: "/assets/agents/sarah.jpg",
+    role: "Commercial Property Expert"
+  }
+];
